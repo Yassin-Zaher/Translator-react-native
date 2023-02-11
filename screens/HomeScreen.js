@@ -20,7 +20,7 @@ export default function HomeScreen(props) {
       <View style={styles.languageContainer}>
         <TouchableOpacity
           style={styles.languageOption}
-          onPress={() => console.log("pressed")}
+          onPress={() => props.navigation.navigate("LanguageSelect")}
         >
           <Text style={styles.languageOptionText}>English</Text>
         </TouchableOpacity>
@@ -29,7 +29,7 @@ export default function HomeScreen(props) {
         </View>
         <TouchableOpacity
           style={styles.languageOption}
-          onPress={() => console.log("pressed")}
+          onPress={() => props.navigation.navigate("LanguageSelect")}
         >
           <Text style={styles.languageOptionText}>French</Text>
         </TouchableOpacity>
@@ -54,11 +54,7 @@ export default function HomeScreen(props) {
       </View>
 
       <View style={styles.translatedTextContainer}>
-        <TextInput
-          multiline
-          placeholder="translated text"
-          style={styles.translatedText}
-        />
+        <TextInput style={styles.translatedText} />
 
         <TouchableOpacity
           disabled={resultText === ""}
@@ -73,6 +69,8 @@ export default function HomeScreen(props) {
           />
         </TouchableOpacity>
       </View>
+
+      <View style={styles.historyContainer}></View>
     </View>
   );
 }
@@ -137,5 +135,10 @@ const styles = StyleSheet.create({
     color: colors.priamry,
     flex: 1,
     marginHorizontal: 20,
+  },
+  historyContainer: {
+    backgroundColor: colors.greyBackground,
+    flex: 1,
+    padding: 10,
   },
 });

@@ -11,6 +11,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useCallback, useEffect, useState } from "react";
 import colors from "./utils/colors";
+import LanguageSelectScreen from "./screens/LanguageSelectScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -104,11 +105,25 @@ export default function App() {
             headerStyle: { backgroundColor: colors.priamry },
           }}
         >
-          <Stack.Screen
-            name="Home Screen"
-            component={ButtomTabNavigator}
-            options={{ headerTitle: "Translate" }}
-          />
+          <Stack.Group>
+            <Stack.Screen
+              name="Home Screen"
+              component={ButtomTabNavigator}
+              options={{ headerTitle: "Translate" }}
+            />
+          </Stack.Group>
+
+          <Stack.Group
+            screenOptions={{
+              presentation: "modal",
+            }}
+          >
+            <Stack.Screen
+              name="LanguageSelect"
+              component={LanguageSelectScreen}
+              options={{ headerTitle: "Translate" }}
+            />
+          </Stack.Group>
         </Stack.Navigator>
       </View>
     </NavigationContainer>
