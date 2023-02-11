@@ -9,10 +9,12 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../utils/colors";
 import { useState } from "react";
 export default function HomeScreen(props) {
   const [enteredText, setEnteredText] = useState("");
+  const [resultText, setResultText] = useState("");
   return (
     <View style={styles.container}>
       <View style={styles.languageContainer}>
@@ -47,6 +49,27 @@ export default function HomeScreen(props) {
             name="arrow-forward-circle"
             size={24}
             color={enteredText !== "" ? colors.priamry : colors.primaryDisabled}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.translatedTextContainer}>
+        <TextInput
+          multiline
+          placeholder="translated text"
+          style={styles.translatedText}
+        />
+
+        <TouchableOpacity
+          disabled={resultText === ""}
+          style={styles.iconContainer}
+        >
+          <MaterialIcons
+            name="content-copy"
+            size={24}
+            color={
+              resultText !== "" ? colors.textColor : colors.textColorDisabled
+            }
           />
         </TouchableOpacity>
       </View>
@@ -100,5 +123,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
+  },
+  translatedTextContainer: {
+    borderBottomColor: colors.lightGrey,
+    borderBottomWidth: 1,
+    flexDirection: "row",
+    height: 90,
+    paddingVertical: 15,
+  },
+  translatedText: {
+    fontFamily: "regular",
+    letterSpacing: 0.3,
+    color: colors.priamry,
+    flex: 1,
+    marginHorizontal: 20,
   },
 });
