@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  ActivityIndicator,
   Button,
   StyleSheet,
   Text,
@@ -15,6 +16,16 @@ import { useState } from "react";
 export default function HomeScreen(props) {
   const [enteredText, setEnteredText] = useState("");
   const [resultText, setResultText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const LoadTraslateComponent = () => {
+    return (
+      <Text>
+        Translating ...
+        <ActivityIndicator />
+      </Text>
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.languageContainer}>
@@ -62,6 +73,7 @@ export default function HomeScreen(props) {
       </View>
 
       <View style={styles.translatedTextContainer}>
+        {isLoading && <LoadTraslateComponent />}
         <TextInput style={styles.translatedText} />
 
         <TouchableOpacity

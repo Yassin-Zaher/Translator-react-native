@@ -1,14 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import {
   HeaderButtons,
   Item,
   HeaderButton,
   itemComponent,
 } from "react-navigation-header-buttons";
+import LanguageItem from "../components/LanguageItem";
 import colors from "../utils/colors";
+import supportedLanguages from "../utils/supportedLanguages";
 export default function LanguageSelectScreen({ navigation, route }) {
   const params = route.params || {};
   const { title } = params;
@@ -40,14 +42,23 @@ export default function LanguageSelectScreen({ navigation, route }) {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Language Select Screen</Text>
-      <StatusBar style="auto" />
+      {
+        <FlatList
+          data={Object.keys(supportedLanguages)}
+          renderItem={(itemData) => {
+            const languageKey = itemData.item;
+            const languageString = supportedLanguages[languageKey];
+            return <LanguageItem text={languageString} />;
+          }}
+        />
+      }
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
