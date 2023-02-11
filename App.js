@@ -96,6 +96,7 @@ export default function App() {
   if (!appIsLoaded) {
     return null;
   }
+
   return (
     <NavigationContainer>
       <View onLayout={onLayout} style={{ flex: 1 }}>
@@ -115,13 +116,23 @@ export default function App() {
 
           <Stack.Group
             screenOptions={{
-              presentation: "modal",
+              presentation: "containedModal",
+              headerStyle: {
+                backgroundColor: "white",
+              },
+
+              headerTitleStyle: {
+                color: colors.textColor,
+                fontFamily: "medium",
+              },
             }}
           >
             <Stack.Screen
               name="LanguageSelect"
               component={LanguageSelectScreen}
-              options={{ headerTitle: "Translate" }}
+              options={{
+                headerTitle: "Translate",
+              }}
             />
           </Stack.Group>
         </Stack.Navigator>
