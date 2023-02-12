@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../utils/colors";
 import { useCallback, useEffect, useState } from "react";
 import supportedLanguages from "../utils/supportedLanguages";
+import * as Clipboard from "expo-clipboard";
 
 import { translate } from "@vitalets/google-translate-api";
 
@@ -36,9 +37,25 @@ export default function HomeScreen(props) {
   }, [params.languageTo, params.languageFrom]);
 
   const onSubmitForm = useCallback(async () => {
-    const { text } = await translate(enteredText, { to: languageTo });
+    try {
+      setIsLoading(true);
+      const { text } = await translate(enteredText, {
+        to: languageTo,
+        from: languageFrom,
+      });
+      if (!text) {
+        setResultText("Error tranlating, please try later");
+        return;
+      }
+      setResultText(text);
+      setResultText(text);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
 
-    setResultText(text); // => 'Hello World! How are you?'
+    // => 'Hello World! How are you?'
   }, [enteredText, languageTo, languageFrom]);
 
   const LoadTraslateComponent = () => {
@@ -49,6 +66,10 @@ export default function HomeScreen(props) {
       </Text>
     );
   };
+
+  const copieTextToClipBoard = useCallback(async () => {
+    await Clipboard.setStringAsync(resultText);
+  });
   return (
     <View style={styles.container}>
       <View style={styles.languageContainer}>
@@ -63,7 +84,7 @@ export default function HomeScreen(props) {
           }
         >
           <Text style={styles.languageOptionText}>
-            {/* supportedLanguages[languageFrom] */} auto detect
+            {supportedLanguages[languageFrom]}
           </Text>
         </TouchableOpacity>
         <View style={styles.arrowContainer}>
@@ -89,26 +110,41 @@ export default function HomeScreen(props) {
           multiline
           placeholder="Enter text"
           style={styles.textInput}
-          onChangeText={(text) => setEnteredText(text)}
+          onChangeText={(text) => {
+            if (enteredText.length === 1) {
+              setResultText("");
+            }
+            setEnteredText(text);
+          }}
         />
         <TouchableOpacity
           onPress={onSubmitForm}
           disabled={enteredText === ""}
           style={styles.iconContainer}
         >
-          <Ionicons
-            name="arrow-forward-circle"
-            size={24}
-            color={enteredText !== "" ? colors.priamry : colors.primaryDisabled}
-          />
+          {isLoading ? (
+            <LoadTraslateComponent />
+          ) : (
+            <Ionicons
+              name="arrow-forward-circle"
+              size={24}
+              color={
+                enteredText !== "" ? colors.priamry : colors.primaryDisabled
+              }
+            />
+          )}
         </TouchableOpacity>
       </View>
 
       <View style={styles.translatedTextContainer}>
-        {isLoading && <LoadTraslateComponent />}
-        <TextInput style={styles.translatedText} value={resultText} />
+        <TextInput
+          style={styles.translatedText}
+          value={resultText}
+          allowFontScaling={true}
+        />
 
         <TouchableOpacity
+          onPress={() => copieTextToClipBoard()}
           disabled={resultText === ""}
           style={styles.iconContainer}
         >
