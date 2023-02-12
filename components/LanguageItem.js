@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import colors from "../utils/colors";
 export default function LanguageItem(props) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.iconContainer}>
         {props.selected && (
           <Feather name="check" size={18} color={colors.textColor} />

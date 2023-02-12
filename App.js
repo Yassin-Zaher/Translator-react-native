@@ -108,7 +108,7 @@ export default function App() {
         >
           <Stack.Group>
             <Stack.Screen
-              name="Home Screen"
+              name="main"
               component={ButtomTabNavigator}
               options={{ headerTitle: "Translate" }}
             />

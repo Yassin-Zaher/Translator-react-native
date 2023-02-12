@@ -12,11 +12,29 @@ import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../utils/colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import supportedLanguages from "../utils/supportedLanguages";
+
 export default function HomeScreen(props) {
+  const params = props.route.params || {};
+  console.log(params);
+  console.log(params.languageTo);
+  console.log(params.languageFrom);
+
   const [enteredText, setEnteredText] = useState("");
   const [resultText, setResultText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [languageTo, setLangugeTo] = useState("fr");
+  const [languageFrom, setLangugeFrom] = useState("en");
+
+  useEffect(() => {
+    if (params.languageFrom) {
+      setLangugeFrom(params.languageFrom);
+    }
+    if (params.languageTo) {
+      setLangugeTo(params.languageTo);
+    }
+  }, [params.languageTo, params.languageFrom]);
 
   const LoadTraslateComponent = () => {
     return (
@@ -34,10 +52,14 @@ export default function HomeScreen(props) {
           onPress={() =>
             props.navigation.navigate("LanguageSelect", {
               title: "Translate From",
+              selected: languageFrom,
+              mode: "from",
             })
           }
         >
-          <Text style={styles.languageOptionText}>English</Text>
+          <Text style={styles.languageOptionText}>
+            {supportedLanguages[languageFrom]}
+          </Text>
         </TouchableOpacity>
         <View style={styles.arrowContainer}>
           <AntDesign name="arrowright" size={24} color={colors.lightGrey} />
@@ -47,10 +69,14 @@ export default function HomeScreen(props) {
           onPress={() =>
             props.navigation.navigate("LanguageSelect", {
               title: "Translate To",
+              selected: languageTo,
+              mode: "to",
             })
           }
         >
-          <Text style={styles.languageOptionText}>French</Text>
+          <Text style={styles.languageOptionText}>
+            {supportedLanguages[languageTo]}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>

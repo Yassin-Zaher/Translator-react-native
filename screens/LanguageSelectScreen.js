@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import {
   HeaderButtons,
@@ -13,7 +13,8 @@ import colors from "../utils/colors";
 import supportedLanguages from "../utils/supportedLanguages";
 export default function LanguageSelectScreen({ navigation, route }) {
   const params = route.params || {};
-  const { title } = params;
+  const { title, selected } = params;
+
   const CustomHeaderButton = (props) => {
     return (
       <HeaderButton
@@ -40,6 +41,18 @@ export default function LanguageSelectScreen({ navigation, route }) {
       },
     });
   }, []);
+
+  const onSelectLangauge = useCallback(
+    (languageKey) => {
+      const keyData = params.mode === "to" ? "languageTo" : "languageFrom";
+
+      navigation.navigate("main", {
+        screen: "Home",
+        params: { [keyData]: languageKey },
+      });
+    },
+    [params, navigation]
+  );
   return (
     <View style={styles.container}>
       {
@@ -48,7 +61,14 @@ export default function LanguageSelectScreen({ navigation, route }) {
           renderItem={(itemData) => {
             const languageKey = itemData.item;
             const languageString = supportedLanguages[languageKey];
-            return <LanguageItem text={languageString} />;
+
+            return (
+              <LanguageItem
+                text={languageString}
+                selected={languageKey === selected}
+                onPress={() => onSelectLangauge(languageKey)}
+              />
+            );
           }}
         />
       }
