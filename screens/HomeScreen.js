@@ -12,14 +12,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../utils/colors";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import supportedLanguages from "../utils/supportedLanguages";
+
+import { translate } from "@vitalets/google-translate-api";
 
 export default function HomeScreen(props) {
   const params = props.route.params || {};
-  console.log(params);
-  console.log(params.languageTo);
-  console.log(params.languageFrom);
 
   const [enteredText, setEnteredText] = useState("");
   const [resultText, setResultText] = useState("");
@@ -35,6 +34,12 @@ export default function HomeScreen(props) {
       setLangugeTo(params.languageTo);
     }
   }, [params.languageTo, params.languageFrom]);
+
+  const onSubmitForm = useCallback(async () => {
+    const { text } = await translate(enteredText, { to: languageTo });
+
+    setResultText(text); // => 'Hello World! How are you?'
+  }, [enteredText, languageTo, languageFrom]);
 
   const LoadTraslateComponent = () => {
     return (
@@ -58,7 +63,7 @@ export default function HomeScreen(props) {
           }
         >
           <Text style={styles.languageOptionText}>
-            {supportedLanguages[languageFrom]}
+            {/* supportedLanguages[languageFrom] */} auto detect
           </Text>
         </TouchableOpacity>
         <View style={styles.arrowContainer}>
@@ -87,6 +92,7 @@ export default function HomeScreen(props) {
           onChangeText={(text) => setEnteredText(text)}
         />
         <TouchableOpacity
+          onPress={onSubmitForm}
           disabled={enteredText === ""}
           style={styles.iconContainer}
         >
@@ -100,7 +106,7 @@ export default function HomeScreen(props) {
 
       <View style={styles.translatedTextContainer}>
         {isLoading && <LoadTraslateComponent />}
-        <TextInput style={styles.translatedText} />
+        <TextInput style={styles.translatedText} value={resultText} />
 
         <TouchableOpacity
           disabled={resultText === ""}
