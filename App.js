@@ -12,6 +12,8 @@ import * as Font from "expo-font";
 import { useCallback, useEffect, useState } from "react";
 import colors from "./utils/colors";
 import LanguageSelectScreen from "./screens/LanguageSelectScreen";
+import store from "./store/store";
+import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -98,46 +100,48 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <View onLayout={onLayout} style={{ flex: 1 }}>
-        <Stack.Navigator
-          screenOptions={{
-            headerTitleStyle: { fontFamily: "medium", color: "white" },
-            headerStyle: { backgroundColor: colors.priamry },
-          }}
-        >
-          <Stack.Group>
-            <Stack.Screen
-              name="main"
-              component={ButtomTabNavigator}
-              options={{ headerTitle: "Translate" }}
-            />
-          </Stack.Group>
-
-          <Stack.Group
+    <Provider store={store}>
+      <NavigationContainer>
+        <View onLayout={onLayout} style={{ flex: 1 }}>
+          <Stack.Navigator
             screenOptions={{
-              presentation: "containedModal",
-              headerStyle: {
-                backgroundColor: "white",
-              },
-
-              headerTitleStyle: {
-                color: colors.textColor,
-                fontFamily: "medium",
-              },
+              headerTitleStyle: { fontFamily: "medium", color: "white" },
+              headerStyle: { backgroundColor: colors.priamry },
             }}
           >
-            <Stack.Screen
-              name="LanguageSelect"
-              component={LanguageSelectScreen}
-              options={{
-                headerTitle: "Translate",
+            <Stack.Group>
+              <Stack.Screen
+                name="main"
+                component={ButtomTabNavigator}
+                options={{ headerTitle: "Translate" }}
+              />
+            </Stack.Group>
+
+            <Stack.Group
+              screenOptions={{
+                presentation: "containedModal",
+                headerStyle: {
+                  backgroundColor: "white",
+                },
+
+                headerTitleStyle: {
+                  color: colors.textColor,
+                  fontFamily: "medium",
+                },
               }}
-            />
-          </Stack.Group>
-        </Stack.Navigator>
-      </View>
-    </NavigationContainer>
+            >
+              <Stack.Screen
+                name="LanguageSelect"
+                component={LanguageSelectScreen}
+                options={{
+                  headerTitle: "Translate",
+                }}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </View>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

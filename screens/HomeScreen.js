@@ -17,9 +17,12 @@ import supportedLanguages from "../utils/supportedLanguages";
 import * as Clipboard from "expo-clipboard";
 
 import { translate } from "@vitalets/google-translate-api";
+import { useDispatch } from "react-redux";
+import { addHistoryItem } from "../store/historySlice";
 
 export default function HomeScreen(props) {
   const params = props.route.params || {};
+  const dispatch = useDispatch();
 
   const [enteredText, setEnteredText] = useState("");
   const [resultText, setResultText] = useState("");
@@ -39,16 +42,17 @@ export default function HomeScreen(props) {
   const onSubmitForm = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { text } = await translate(enteredText, {
+      const result = await translate(enteredText, {
         to: languageTo,
         from: languageFrom,
       });
+      const { text } = result;
       if (!text) {
         setResultText("Error tranlating, please try later");
         return;
       }
       setResultText(text);
-      setResultText(text);
+      dispatch(addHistoryItem({ item: result }));
     } catch (err) {
       console.log(err);
     } finally {
