@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import {
   ActivityIndicator,
   Button,
+  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -15,14 +16,17 @@ import colors from "../utils/colors";
 import { useCallback, useEffect, useState } from "react";
 import supportedLanguages from "../utils/supportedLanguages";
 import * as Clipboard from "expo-clipboard";
+import uuid from "react-native-uuid";
 
 import { translate } from "@vitalets/google-translate-api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addHistoryItem } from "../store/historySlice";
+import TranslationResult from "../components/TranslationResult";
 
 export default function HomeScreen(props) {
   const params = props.route.params || {};
   const dispatch = useDispatch();
+  const history = useSelector((state) => state.history.items);
 
   const [enteredText, setEnteredText] = useState("");
   const [resultText, setResultText] = useState("");
@@ -52,6 +56,11 @@ export default function HomeScreen(props) {
         return;
       }
       setResultText(text);
+
+      const id = uuid.v4();
+      result.id = id;
+      result.dateTime = new Date().toISOString();
+      result.originalText = enteredText;
       dispatch(addHistoryItem({ item: result }));
     } catch (err) {
       console.log(err);
@@ -162,7 +171,15 @@ export default function HomeScreen(props) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.historyContainer}></View>
+      <View style={styles.historyContainer}>
+        <FlatList
+          data={history}
+          renderItem={(itemData) => {
+            console.log(itemData.item);
+            return <TranslationResult itemId={itemData.item.id} />;
+          }}
+        />
+      </View>
     </View>
   );
 }

@@ -5,4 +5,5 @@ export default {
   textColor: "#202124",
   textColorDisabled: "#898989",
   greyBackground: "#f2f2f7",
+  subTextColor: "#5f6368",
 };
