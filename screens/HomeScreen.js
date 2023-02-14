@@ -22,6 +22,7 @@ import { translate } from "@vitalets/google-translate-api";
 import { useDispatch, useSelector } from "react-redux";
 import { addHistoryItem } from "../store/historySlice";
 import TranslationResult from "../components/TranslationResult";
+import { saveItem } from "../store/savedItemSlice";
 
 export default function HomeScreen(props) {
   const params = props.route.params || {};
@@ -83,6 +84,7 @@ export default function HomeScreen(props) {
   const copieTextToClipBoard = useCallback(async () => {
     await Clipboard.setStringAsync(resultText);
   });
+
   return (
     <View style={styles.container}>
       <View style={styles.languageContainer}>
@@ -175,7 +177,6 @@ export default function HomeScreen(props) {
         <FlatList
           data={history}
           renderItem={(itemData) => {
-            console.log(itemData.item);
             return <TranslationResult itemId={itemData.item.id} />;
           }}
         />

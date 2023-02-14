@@ -1,12 +1,20 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import colors from "../utils/colors";
 import { Entypo } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { saveItem } from "../store/savedItemSlice";
+import { useCallback } from "react";
 export default function TranslationResult(props) {
   const { itemId } = props;
   const item = useSelector((state) =>
     state.history.items.find((item) => item.id === itemId)
   );
+
+  const dispatch = useDispatch();
+
+  const startItem = useCallback(() => {
+    dispatch(saveItem({ item }));
+  }, [itemId]);
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -17,7 +25,7 @@ export default function TranslationResult(props) {
           {item.text}
         </Text>
       </View>
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={startItem}>
         <Entypo name="star" size={24} color={colors.subTextColor} />
       </TouchableOpacity>
     </View>
