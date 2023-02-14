@@ -20,9 +20,24 @@ import uuid from "react-native-uuid";
 
 import { translate } from "@vitalets/google-translate-api";
 import { useDispatch, useSelector } from "react-redux";
-import { addHistoryItem } from "../store/historySlice";
+import { addHistoryItem, setHistoryItems } from "../store/historySlice";
 import TranslationResult from "../components/TranslationResult";
-import { saveItem } from "../store/savedItemSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const loadData = () => {
+  return async (dispatch) => {
+    try {
+      const historyString = await AsyncStorage.getItem("history");
+      if (historyString !== null) {
+        const history = JSON.parse(historyString);
+        console.log(history[0]);
+        dispatch(setHistoryItems({ items: history }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
 
 export default function HomeScreen(props) {
   const params = props.route.params || {};
@@ -43,6 +58,22 @@ export default function HomeScreen(props) {
       setLangugeTo(params.languageTo);
     }
   }, [params.languageTo, params.languageFrom]);
+
+  useEffect(() => {
+    dispatch(loadData());
+  }, [dispatch]);
+
+  // save items tp local storage
+  useEffect(() => {
+    const saveHistoryItems = async () => {
+      try {
+        await AsyncStorage.setItem("history", JSON.stringify(history));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    saveHistoryItems();
+  }, [history]);
 
   const onSubmitForm = useCallback(async () => {
     try {
