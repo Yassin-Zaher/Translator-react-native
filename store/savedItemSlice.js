@@ -8,10 +8,8 @@ const savedItemsSlice = createSlice({
 
   reducers: {
     saveItem: (state, action) => {
-      const { item } = action.payload;
-      if (item) {
-        state.items.push(item);
-      }
+      const { items } = action.payload;
+      state.items = items;
     },
   },
 });

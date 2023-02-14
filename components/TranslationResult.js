@@ -5,16 +5,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveItem } from "../store/savedItemSlice";
 import { useCallback } from "react";
 export default function TranslationResult(props) {
+  const dispatch = useDispatch();
   const { itemId } = props;
   const item = useSelector((state) =>
     state.history.items.find((item) => item.id === itemId)
   );
+  const savedItems = useSelector((state) => state.savedItems.items);
 
-  const dispatch = useDispatch();
-
+  const isSaved = savedItems.some((i) => i.id === itemId);
+  const icon = isSaved ? "star" : "star-outlined";
   const startItem = useCallback(() => {
-    dispatch(saveItem({ item }));
-  }, [itemId]);
+    let newSavedItems;
+    if (isSaved) {
+      newSavedItems = savedItems.filter((i) => i.id !== itemId);
+    } else {
+      newSavedItems = savedItems.slice();
+      newSavedItems.push(item);
+    }
+    dispatch(saveItem({ items: newSavedItems }));
+  }, [dispatch, savedItems]);
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -26,7 +35,7 @@ export default function TranslationResult(props) {
         </Text>
       </View>
       <TouchableOpacity style={styles.iconContainer} onPress={startItem}>
-        <Entypo name="star" size={24} color={colors.subTextColor} />
+        <Entypo name={icon} size={24} color={colors.subTextColor} />
       </TouchableOpacity>
     </View>
   );
