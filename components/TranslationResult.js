@@ -4,6 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { saveItem } from "../store/savedItemSlice";
 import { useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function TranslationResult(props) {
   const dispatch = useDispatch();
   const { itemId } = props;
@@ -14,7 +15,7 @@ export default function TranslationResult(props) {
 
   const isSaved = savedItems.some((i) => i.id === itemId);
   const icon = isSaved ? "star" : "star-outlined";
-  const startItem = useCallback(() => {
+  const startItem = useCallback(async () => {
     let newSavedItems;
     if (isSaved) {
       newSavedItems = savedItems.filter((i) => i.id !== itemId);
@@ -22,6 +23,8 @@ export default function TranslationResult(props) {
       newSavedItems = savedItems.slice();
       newSavedItems.push(item);
     }
+
+    await AsyncStorage.setItem("savedItems", JSON.stringify(newSavedItems));
     dispatch(saveItem({ items: newSavedItems }));
   }, [dispatch, savedItems]);
   return (
@@ -64,6 +67,7 @@ const styles = StyleSheet.create({
     fontFamily: "regular",
     color: colors.subTextColor,
     letterSpacing: 0.3,
+    fontSize: 13,
   },
   iconContainer: {
     width: 30,
