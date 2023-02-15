@@ -113,7 +113,7 @@ export default function App() {
               <Stack.Screen
                 name="main"
                 component={ButtomTabNavigator}
-                options={{ headerTitle: "Translate" }}
+                options={{ headerTitle: "(OFPPT IS TRASH) Translate" }}
               />
             </Stack.Group>
 

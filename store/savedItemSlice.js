@@ -11,8 +11,11 @@ const savedItemsSlice = createSlice({
       const { items } = action.payload;
       state.items = items;
     },
+    clearSavedItems: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { saveItem } = savedItemsSlice.actions;
+export const { saveItem, clearSavedItems } = savedItemsSlice.actions;
 export default savedItemsSlice.reducer;
