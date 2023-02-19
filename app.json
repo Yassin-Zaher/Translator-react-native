@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "GoogleTranslate",
-    "slug": "GoogleTranslate",
+    "slug": "translate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,10 +24,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.yassin_zaher.translate"
     },
+    
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "07724d1b-39a0-4196-b245-cb6b0804114a"
+      }
+    },
+    "owner": "yassin_zaher"
   }
 }
